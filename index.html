@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#23312f" />
+    <meta
+      name="description"
+      content="A simple, local-first Kanban task manager."
+    />
+    <title>Kanban Task Manager</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="alternate icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./dist/main.js"></script>
+  </head>
+  <body>
+    <header class="navbar" role="banner">
+      <div class="navbar-container">
+        <div class="navbar-brand">
+          <svg class="app-icon" width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect width="28" height="28" rx="6" fill="#23312f"/>
+            <rect x="4.5" y="5.5" width="5" height="16" rx="1.5" fill="#c78b3b"/>
+            <rect x="11.5" y="5.5" width="5" height="11" rx="1.5" fill="#548a91"/>
+            <rect x="18.5" y="5.5" width="5" height="14" rx="1.5" fill="#54896b"/>
+          </svg>
+          <h1 class="app-title">Kanban Task Manager</h1>
+        </div>
+        <div class="navbar-actions">
+          <button
+            class="button button-primary add-task-button"
+            id="add-task-button"
+            type="button"
+            aria-label="Create new task"
+            title="Create new task"
+          >
+            <span class="button-plus" aria-hidden="true">+</span>
+            <span>Add Task</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="board" aria-label="Task board">
+        <section class="column column-todo" aria-labelledby="todo-heading">
+          <header class="column-header">
+            <div class="column-title-group">
+              <span class="status-icon status-icon-todo" aria-hidden="true"
+                >○</span
+              >
+              <h2 id="todo-heading">To Do</h2>
+            </div>
+            <span
+              class="task-count"
+              id="todo-count"
+              aria-label="To Do task count"
+              >0</span
+            >
+          </header>
+          <div class="task-list" id="todo-list"></div>
+          <p class="empty-state" id="todo-empty">
+            <span class="empty-icon" aria-hidden="true">□</span><span>No tasks yet</span>
+          </p>
+        </section>
+
+        <section
+          class="column column-progress"
+          aria-labelledby="progress-heading"
+        >
+          <header class="column-header">
+            <div class="column-title-group">
+              <span class="status-icon status-icon-progress" aria-hidden="true"
+                >◷</span
+              >
+              <h2 id="progress-heading">In Progress</h2>
+            </div>
+            <span
+              class="task-count"
+              id="progress-count"
+              aria-label="In Progress task count"
+              >0</span
+            >
+          </header>
+          <div class="task-list" id="progress-list"></div>
+          <p class="empty-state" id="progress-empty">
+            <span class="empty-icon" aria-hidden="true">□</span><span>No tasks yet</span>
+          </p>
+        </section>
+
+        <section class="column column-done" aria-labelledby="done-heading">
+          <header class="column-header">
+            <div class="column-title-group">
+              <span class="status-icon status-icon-done" aria-hidden="true"
+                >✓</span
+              >
+              <h2 id="done-heading">Completed</h2>
+            </div>
+            <span
+              class="task-count"
+              id="done-count"
+              aria-label="Done task count"
+              >0</span
+            >
+          </header>
+          <div class="task-list" id="done-list"></div>
+          <p class="empty-state" id="done-empty">
+            <span class="empty-icon" aria-hidden="true">□</span><span>No tasks yet</span>
+          </p>
+        </section>
+      </section>
+
+      <footer class="page-footer">
+        Made with <span class="footer-heart" aria-label="love">♥</span> by Route Academy
+      </footer>
+    </main>
+
+    <dialog class="task-dialog" id="task-dialog" aria-labelledby="dialog-title">
+      <form class="task-form" id="task-form" novalidate>
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow" id="dialog-eyebrow">YOUR NEXT STEP</p>
+            <h2 id="dialog-title">Create New Task</h2>
+          </div>
+          <button
+            class="icon-button"
+            id="close-dialog-button"
+            type="button"
+            aria-label="Close task form"
+          >
+            <span aria-hidden="true">✕</span>
+          </button>
+        </div>
+
+        <label for="task-title">Title <span aria-hidden="true">*</span></label>
+        <input
+          id="task-title"
+          name="title"
+          type="text"
+          maxlength="100"
+          autocomplete="off"
+          placeholder="What needs to be done?"
+          required
+          aria-describedby="title-error"
+        />
+        <p class="field-error" id="title-error" role="alert"></p>
+
+        <label for="task-priority">Priority</label>
+        <select id="task-priority" name="priority">
+          <option value="low">Low</option>
+          <option value="medium" selected>Medium</option>
+          <option value="high">High</option>
+        </select>
+
+        <label for="task-due-date"
+          >Due Date <span class="optional-label">Optional</span></label
+        >
+        <input id="task-due-date" name="dueDate" type="date" />
+
+        <label for="task-description"
+          >Description <span class="optional-label">Optional</span></label
+        >
+        <textarea
+          id="task-description"
+          name="description"
+          rows="4"
+          maxlength="500"
+          placeholder="Add more details about this task..."
+        ></textarea>
+        <p class="character-count">
+          <span id="description-count">0</span> / 500
+        </p>
+
+        <div class="status-field" id="status-field" hidden>
+          <label for="task-status">Status</label>
+          <select id="task-status" name="status">
+            <option value="todo">To Do</option>
+            <option value="in-progress">In Progress</option>
+            <option value="done">Completed</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button
+            class="button button-secondary"
+            id="cancel-dialog-button"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="button button-primary"
+            id="save-task-button"
+            type="submit"
+          >
+            Add Task
+          </button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+      <div class="confirm-content">
+        <div class="confirm-icon-wrapper" aria-hidden="true">
+          <span class="confirm-icon">🗑</span>
+        </div>
+        <h2 id="confirm-title">Delete Task</h2>
+        <p class="confirm-message" id="confirm-message">
+          Are you sure you want to delete <strong id="confirm-task-title"></strong>? This action cannot be undone.
+        </p>
+        <div class="confirm-actions">
+          <button
+            class="button button-secondary"
+            id="cancel-delete-button"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="button button-danger"
+            id="confirm-delete-button"
+            type="button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </dialog>
+  </body>
+</html>

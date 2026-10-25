@@ -1,0 +1,13 @@
+{
+  "name": "kanban-task-manager",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "dev": "http-server . -p 4175 -c-1"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "typescript": "^5.9.3"
+  }
+}
